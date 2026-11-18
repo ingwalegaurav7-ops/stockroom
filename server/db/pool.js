@@ -26,7 +26,12 @@ pool.getConnection()
   })
   .catch(err => {
     console.error('Database connection failed:', err.message);
-    process.exit(1);
+    // Don't exit in production; allow health checks and static serving to work
+    if (process.env.NODE_ENV === 'production') {
+      console.warn('Continuing without database connection...');
+    } else {
+      process.exit(1);
+    }
   });
 
 export default pool;
