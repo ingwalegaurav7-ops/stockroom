@@ -118,8 +118,8 @@ Or run both together:
 npm run dev
 ```
 
-- **Frontend**: http://localhost:5173
-- **API**: http://localhost:3001/api/health
+- **Frontend (dev)**: http://localhost:5173
+- **API (dev)**: http://localhost:3001/api/health
 
 ### 5. Demo Login
 - **Email**: demo@stockroom.local
@@ -276,6 +276,21 @@ stockroom-v2/
 - **Zustand store**: Lightweight auth state with persistence
 - **Design system**: CSS custom properties, consistent spacing/typography
 - **Responsive**: Mobile-first sidebar, scrollable tables, collapsible filters
+
+---
+
+## Live Demo
+
+**URL**: [https://stockroom.onrender.com](https://stockroom.onrender.com)
+
+**Demo Login**:
+- **Email**: `demo@stockroom.local`
+- **Password**: `demo123`
+
+**Deployed Stack**:
+- **Frontend + API**: Render Free (single HTTPS origin)
+- **Database**: TiDB Cloud Starter (MySQL-compatible, seeded with demo data)
+- **Auth**: JWT in httpOnly cookies
 
 ---
 
