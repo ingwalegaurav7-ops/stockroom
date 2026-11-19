@@ -26,7 +26,11 @@ router.get('/', validateProductQuery, async (req, res) => {
       order = 'asc',
     } = req.query;
 
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const pageSize = parseInt(limit);
+    const offset = (parseInt(page) - 1) * pageSize;
+    if (!Number.isSafeInteger(pageSize) || pageSize < 1 || !Number.isSafeInteger(offset) || offset < 0) {
+      return res.status(400).json({ error: 'Invalid pagination' });
+    }
     const validSortFields = ['name', 'sku', 'current_stock', 'unit_price', 'category', 'reorder_level'];
     const sortField = validSortFields.includes(sort) ? sort : 'name';
     const sortOrder = order === 'desc' ? 'DESC' : 'ASC';
@@ -73,8 +77,8 @@ router.get('/', validateProductQuery, async (req, res) => {
        JOIN categories c ON p.category_id = c.id
        ${whereClause}
        ORDER BY ${sortColumn} ${sortOrder}
-       LIMIT ? OFFSET ?`,
-      [...params, parseInt(limit), offset]
+       LIMIT ${pageSize} OFFSET ${offset}`,
+      params
     );
 
     // Add computed stock_status to each product
@@ -155,7 +159,7 @@ router.get('/export', validateProductQuery, async (req, res) => {
         `"${p.name.replace(/"/g, '""')}"`,
         `"${p.sku.replace(/"/g, '""')}"`,
         `"${p.category_name.replace(/"/g, '""')}"`,
-        p.unit_price.toFixed(2),
+        Number(p.unit_price).toFixed(2),
         p.current_stock,
         p.reorder_level,
         stockStatus,

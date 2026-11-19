@@ -32,7 +32,11 @@ router.get('/', validateOrderQuery, async (req, res) => {
       date_to,
     } = req.query;
 
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const pageSize = parseInt(limit);
+    const offset = (parseInt(page) - 1) * pageSize;
+    if (!Number.isSafeInteger(pageSize) || pageSize < 1 || !Number.isSafeInteger(offset) || offset < 0) {
+      return res.status(400).json({ error: 'Invalid pagination' });
+    }
 
     let whereClause = 'WHERE 1=1';
     const params = [];
@@ -72,8 +76,8 @@ router.get('/', validateOrderQuery, async (req, res) => {
        JOIN users u ON o.created_by = u.id
        ${whereClause}
        ORDER BY o.created_at DESC
-       LIMIT ? OFFSET ?`,
-      [...params, parseInt(limit), offset]
+       LIMIT ${pageSize} OFFSET ${offset}`,
+      params
     );
 
     // Get line counts for each order

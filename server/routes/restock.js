@@ -22,7 +22,11 @@ router.get('/', validateRestockQuery, async (req, res) => {
       status,
     } = req.query;
 
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const pageSize = parseInt(limit);
+    const offset = (parseInt(page) - 1) * pageSize;
+    if (!Number.isSafeInteger(pageSize) || pageSize < 1 || !Number.isSafeInteger(offset) || offset < 0) {
+      return res.status(400).json({ error: 'Invalid pagination' });
+    }
 
     let whereClause = 'WHERE 1=1';
     const params = [];
@@ -59,8 +63,8 @@ router.get('/', validateRestockQuery, async (req, res) => {
        LEFT JOIN users u3 ON rr.received_by = u3.id
        ${whereClause}
        ORDER BY rr.requested_at DESC
-       LIMIT ? OFFSET ?`,
-      [...params, parseInt(limit), offset]
+       LIMIT ${pageSize} OFFSET ${offset}`,
+      params
     );
 
     res.json({

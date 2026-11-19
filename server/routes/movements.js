@@ -24,7 +24,11 @@ router.get('/', validateMovementQuery, async (req, res) => {
       date_to,
     } = req.query;
 
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const pageSize = parseInt(limit);
+    const offset = (parseInt(page) - 1) * pageSize;
+    if (!Number.isSafeInteger(pageSize) || pageSize < 1 || !Number.isSafeInteger(offset) || offset < 0) {
+      return res.status(400).json({ error: 'Invalid pagination' });
+    }
 
     let whereClause = 'WHERE 1=1';
     const params = [];
@@ -64,8 +68,8 @@ router.get('/', validateMovementQuery, async (req, res) => {
        LEFT JOIN users u ON m.created_by = u.id
        ${whereClause}
        ORDER BY m.created_at DESC
-       LIMIT ? OFFSET ?`,
-      [...params, parseInt(limit), offset]
+       LIMIT ${pageSize} OFFSET ${offset}`,
+      params
     );
 
     res.json({
@@ -87,7 +91,11 @@ router.get('/', validateMovementQuery, async (req, res) => {
 router.get('/:id/history', validateProductId, async (req, res) => {
   try {
     const { page = 1, limit = 50 } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const pageSize = parseInt(limit);
+    const offset = (parseInt(page) - 1) * pageSize;
+    if (!Number.isSafeInteger(pageSize) || pageSize < 1 || !Number.isSafeInteger(offset) || offset < 0) {
+      return res.status(400).json({ error: 'Invalid pagination' });
+    }
 
     const [countResult] = await pool.execute(
       'SELECT COUNT(*) as total FROM movements WHERE product_id = ?',
@@ -101,8 +109,8 @@ router.get('/:id/history', validateProductId, async (req, res) => {
        LEFT JOIN users u ON m.created_by = u.id
        WHERE m.product_id = ?
        ORDER BY m.created_at DESC
-       LIMIT ? OFFSET ?`,
-      [req.params.id, parseInt(limit), offset]
+       LIMIT ${pageSize} OFFSET ${offset}`,
+      [req.params.id]
     );
 
     res.json({
