@@ -281,7 +281,7 @@ stockroom-v2/
 
 ## Live Demo
 
-**URL**: [https://stockroom.onrender.com](https://stockroom.onrender.com)
+**URL**: [https://stockroom-dyv0.onrender.com](https://stockroom-dyv0.onrender.com)
 
 **Demo Login**:
 - **Email**: `demo@stockroom.local`
