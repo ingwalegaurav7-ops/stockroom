@@ -1,6 +1,6 @@
 # Stockroom
 
-**Portfolio project** for Data Analyst, Operations Analyst, and Full Stack Developer roles. A single-location inventory, order, and restock management application with **Inventory Analytics & Operations**.
+Stockroom is a full-stack application I built to manage inventory, orders, and restock requests for a single location. Its dashboard tracks stock levels, sales trends, and products that need replenishment. Eight SQL views support reporting in Power BI.
 
 ## Stack
 
@@ -82,7 +82,8 @@
 ### 2. Setup Database
 
 ```cmd
-cd C:\Users\ingwa\OneDrive\Desktop\ClaudeProjects\stockroom-v2
+git clone https://github.com/ingwalegaurav7-ops/stockroom.git
+cd stockroom
 
 :: Run schema
 "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p < db\schema.sql
@@ -128,7 +129,7 @@ npm run dev
 ## Project Structure
 
 ```
-stockroom-v2/
+stockroom/
 ├── db/                          # Database scripts
 │   ├── schema.sql              # Tables: users, categories, products, orders, order_lines, movements, restock_requests
 │   ├── seed.sql                # 25 products, 15 orders, movements, restock requests
@@ -260,7 +261,7 @@ stockroom-v2/
 7. Add DAX measures from `powerbi/kpi-definitions.md`
 8. Build report pages: Overview, Trends, Stock Alerts, Restock Pipeline
 
-## Interview Highlights
+## Implementation Notes
 
 ### Technical
 - **Atomic transactions**: Stock updates + movement logging in single DB transaction
@@ -291,7 +292,3 @@ stockroom-v2/
 - **Frontend + API**: Render Free (single HTTPS origin)
 - **Database**: TiDB Cloud Starter (MySQL-compatible, seeded with demo data)
 - **Auth**: JWT in httpOnly cookies
-
----
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
